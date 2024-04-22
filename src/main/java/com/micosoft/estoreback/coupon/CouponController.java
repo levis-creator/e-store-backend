@@ -27,7 +27,7 @@ public class CouponController {
     @PutMapping("{id}")
     ResponseEntity<?> updateCoupon(@RequestBody CouponDTO couponDTO, @PathVariable Long id){
         CouponDTO updatCoupon=couponServices.updateCoupon(couponDTO, id);
-        return new ResponseEntity<>(updatCoupon, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatCoupon, HttpStatus.OK);
     }
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteCoupon(@PathVariable Long id){

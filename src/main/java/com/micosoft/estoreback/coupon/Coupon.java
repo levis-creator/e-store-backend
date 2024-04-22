@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "coupon")
+@Table(name = "coupons")
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -10,7 +10,4 @@ public class AlreadyExist extends RuntimeException{
         super(message);
     }
 
-    public AlreadyExist(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

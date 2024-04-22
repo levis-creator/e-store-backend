@@ -9,7 +9,4 @@ public class BadRequest extends RuntimeException{
         super(message);
     }
 
-    public BadRequest(String message, Throwable cause) {
-        super(message, cause);
-    }
 }
