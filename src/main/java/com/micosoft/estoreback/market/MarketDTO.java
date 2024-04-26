@@ -1,26 +1,23 @@
-package com.micosoft.estoreback.categories;
+package com.micosoft.estoreback.market;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
-@Getter
 @Builder
+@Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class CategoryDTO {
+public class MarketDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
     private String title;
-    private String description;
-    private String slug;
-    private String imageUrl;
-    private Boolean status;
+    private String logo;
+    private Boolean isActive;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ZonedDateTime createdAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ZonedDateTime updateAt;
-
+    private ZonedDateTime updatedAt;
 }

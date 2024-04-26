@@ -1,9 +1,12 @@
 package com.micosoft.estoreback.categories;
 
+import com.micosoft.estoreback.market.Market;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.ZonedDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +28,13 @@ public class Category {
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdAt;
     private ZonedDateTime updateAt;
+
+    @ManyToMany
+    @JoinTable(name = "category_markets",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "markets_id"))
+    private Set<Market> markets = new LinkedHashSet<>();
+
     @PrePersist
     protected void created(){
         createdAt=ZonedDateTime.now();

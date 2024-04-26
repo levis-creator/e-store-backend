@@ -1,17 +1,20 @@
 package com.micosoft.estoreback.market;
 
+import com.micosoft.estoreback.categories.Category;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.ZonedDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "market")
+@Builder
+@Table(name = "markets")
 public class Market {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,5 +23,19 @@ public class Market {
     private String title;
     private String logo;
     private Boolean isActive;
+    @Column(nullable = false, updatable = false)
+    private ZonedDateTime createdAt;
+    private ZonedDateTime updatedAt;
 
+    @ManyToMany(mappedBy = "markets")
+    private Set<Category> categories = new LinkedHashSet<>();
+
+    @PrePersist
+    protected void onCreate(){
+        createdAt=ZonedDateTime.now();
+    }
+
+    public void setUpdatedAt() {
+        this.updatedAt = ZonedDateTime.now();
+    }
 }

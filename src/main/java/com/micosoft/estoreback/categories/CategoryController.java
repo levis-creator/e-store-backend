@@ -18,14 +18,14 @@ public class CategoryController {
       List<CategoryDTO> categoryDTOS=categoryService.getCategories();
         return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
     }
-    @PostMapping("{id}")
-    ResponseEntity<?> createCategory(@RequestBody CategoryDTO categoryDTO){
-        CategoryDTO categoryCreate=categoryService.createCategory(categoryDTO);
+    @PostMapping
+    ResponseEntity<?> createCategory(@RequestBody CategoryInputDTO categoryInputDTO){
+        CategoryInputDTO categoryCreate=categoryService.createCategory(categoryInputDTO);
         return new ResponseEntity<>(categoryCreate, HttpStatus.CREATED);
     }
     @PutMapping("{id}")
-    ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO){
-        CategoryDTO categoryDTOUpdate=categoryService.updateCategory(id, categoryDTO);
+    ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryInputDTO categoryInputDTO){
+        CategoryInputDTO categoryDTOUpdate=categoryService.updateCategory(id, categoryInputDTO);
         return new ResponseEntity<>(categoryDTOUpdate, HttpStatus.OK);
     }
     @DeleteMapping("{id}")

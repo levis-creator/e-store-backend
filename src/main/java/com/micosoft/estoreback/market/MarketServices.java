@@ -1,4 +1,10 @@
 package com.micosoft.estoreback.market;
 
-public class MarketServices {
+import java.util.List;
+
+public interface MarketServices {
+    List<MarketDTO> getMarkets();
+    Market createMarket(MarketInputDTO marketInputDTO);
+    MarketDTO updateMarket(Long id, MarketDTO marketDTO);
+    void deleteMarket(Long id);
 }
