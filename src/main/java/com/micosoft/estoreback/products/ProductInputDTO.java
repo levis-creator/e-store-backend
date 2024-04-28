@@ -23,4 +23,5 @@ public class ProductInputDTO {
     private List<String> tags;
     private Boolean isPublished;
     private Long category;
+    private Long farmer;
 }

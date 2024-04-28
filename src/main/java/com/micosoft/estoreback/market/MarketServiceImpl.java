@@ -8,16 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class MarketServiceImpl implements MarketServices {
     @Autowired
     private final MarketRepository marketRepository;
-    @Autowired
     private final CategoryRepository categoryRepository;
 
     @Override
@@ -32,20 +29,28 @@ public class MarketServiceImpl implements MarketServices {
     }
 
     @Override
+    public List<Market> unFilteredMarkets() {
+        return marketRepository.findAll();
+    }
+
+    @Override
     public Market createMarket(MarketInputDTO marketInputDTO) {
-        try {
             Market market = Market.builder()
                     .title(marketInputDTO.getTitle())
                     .logo(marketInputDTO.getLogo())
                     .isActive(marketInputDTO.getIsActive())
                     .build();
             Set<Long> categoriesId=marketInputDTO.getCategories();
-            if (categoriesId!=null && !categoriesId.isEmpty()){
-                List<Category> categoryList =categoryRepository.findAllById(categoriesId);
-                for (Category category: categoryList){
-                    market.getCategories().add(category);
+        try {
+            if (!categoriesId.isEmpty()){
+                List<Category> categories=categoryRepository.findAllById(categoriesId);
+                if (!categories.isEmpty()){
+                for (Category category:categories){
+                    category.getMarkets().add(market);
+                }
                 }
             }
+
             return marketRepository.save(market);
 
         } catch (Exception e) {
@@ -54,27 +59,35 @@ public class MarketServiceImpl implements MarketServices {
     }
 
     @Override
-    public MarketDTO updateMarket(Long id, MarketDTO marketDTO) {
+    public Market updateMarket(Long id, MarketInputDTO marketInputDTO) {
         Market marketDb = marketRepository.findById(id).orElseThrow(() -> new NotFound("Market Not Found"));
-        if (!marketDTO.getTitle().equals(marketDb.getTitle()) || !marketDTO.getTitle().isBlank()) {
-            marketDb.setTitle(marketDTO.getTitle());
+        List<Category> categoryList=categoryRepository.findAllById(marketInputDTO.getCategories());
+        Set<Category> categorySet= new LinkedHashSet<>(categoryList);
+        if (!marketInputDTO.getTitle().equals(marketDb.getTitle()) && !marketInputDTO.getTitle().trim().isBlank()) {
+            marketDb.setTitle(marketInputDTO.getTitle());
         }
-        if (!marketDTO.getLogo().equals(marketDb.getLogo()) || !marketDTO.getLogo().isBlank()) {
-            marketDb.setLogo(marketDTO.getLogo());
+        if (!marketInputDTO.getLogo().equals(marketDb.getLogo()) && !marketInputDTO.getLogo().trim().isBlank()) {
+            marketDb.setLogo(marketInputDTO.getLogo());
         }
-        if (!marketDTO.getIsActive().equals(marketDb.getIsActive())) {
-            marketDb.setIsActive(marketDTO.getIsActive());
+        if (!marketInputDTO.getIsActive().equals(marketDb.getIsActive())) {
+            marketDb.setIsActive(marketInputDTO.getIsActive());
+        }
+        if (!categorySet.equals(marketDb.getCategories())){
+            marketDb.setCategories(categorySet);
         }
         marketDb.setUpdatedAt();
-        marketRepository.save(marketDb);
-        return marketDTO;
+        return marketRepository.save(marketDb);
+
     }
 
     @Override
     public void deleteMarket(Long id) {
         Market marketDb = marketRepository.findById(id).orElseThrow(() -> new NotFound("Market Not Found"));
         try {
-
+            Set<Category> categoriesRef= marketDb.getCategories();
+            for (Category category: categoriesRef){
+                category.getMarkets().remove(marketDb);
+            }
         marketRepository.delete(marketDb);
         }catch (Exception e){
             throw new ServerError("Something Went wrong");

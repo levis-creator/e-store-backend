@@ -2,6 +2,7 @@ package com.micosoft.estoreback.products;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.micosoft.estoreback.categories.Category;
+import com.micosoft.estoreback.farmers.Farmer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,6 +40,10 @@ public class Product {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "farmer_id")
+    private Farmer farmer;
 
     @PrePersist
     protected void onCreate(){

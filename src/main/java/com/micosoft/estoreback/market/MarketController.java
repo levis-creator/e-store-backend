@@ -19,14 +19,19 @@ public class MarketController {
         List<MarketDTO> marketDTOList=marketServices.getMarkets();
         return new ResponseEntity<>(marketDTOList, HttpStatus.OK);
     }
+    @GetMapping("/unfiltered")
+    ResponseEntity<List<Market>> getUnfileredMarkets(){
+        List<Market> marketList=marketServices.unFilteredMarkets();
+        return new ResponseEntity<>(marketList, HttpStatus.OK);
+    }
     @PostMapping
     ResponseEntity<?>createMarket(@RequestBody MarketInputDTO marketInputDTO){
         Market marketDTOCreate= marketServices.createMarket(marketInputDTO);
         return  new ResponseEntity<>(marketDTOCreate, HttpStatus.CREATED);
     }
     @PutMapping("{id}")
-    ResponseEntity<?>updateMarket(@PathVariable Long id, @RequestBody MarketDTO marketDTO){
-        MarketDTO marketDTOCreate= marketServices.updateMarket(id, marketDTO);
+    ResponseEntity<?>updateMarket(@PathVariable Long id, @RequestBody MarketInputDTO marketInputDTO){
+        Market marketDTOCreate= marketServices.updateMarket(id, marketInputDTO);
         return  new ResponseEntity<>(marketDTOCreate, HttpStatus.OK);
     }
     @DeleteMapping("{id}")

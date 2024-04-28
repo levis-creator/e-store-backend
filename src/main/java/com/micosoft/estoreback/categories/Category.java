@@ -1,5 +1,6 @@
 package com.micosoft.estoreback.categories;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.micosoft.estoreback.market.Market;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,13 +34,13 @@ public class Category {
     @JoinTable(name = "category_markets",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "markets_id"))
+    @JsonIgnore
     private Set<Market> markets = new LinkedHashSet<>();
 
     @PrePersist
     protected void created(){
         createdAt=ZonedDateTime.now();
     }
-
     public void setUpdateAt() {
         this.updateAt = ZonedDateTime.now();
     }
