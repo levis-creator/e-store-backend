@@ -2,7 +2,6 @@ package com.micosoft.estoreback.products;
 
 import com.micosoft.estoreback.categories.CategoryRepository;
 import com.micosoft.estoreback.errors.exceptions.NotFound;
-import com.micosoft.estoreback.farmers.Farmer;
 import com.micosoft.estoreback.farmers.FarmerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

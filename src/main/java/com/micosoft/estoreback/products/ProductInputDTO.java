@@ -18,8 +18,8 @@ public class ProductInputDTO {
     private List<String> images;
     private String sku;
     private String barcode;
-    private Long productPrice;
-    private Long salesPrice;
+    private Float productPrice;
+    private Float salesPrice;
     private List<String> tags;
     private Boolean isPublished;
     private Long category;
