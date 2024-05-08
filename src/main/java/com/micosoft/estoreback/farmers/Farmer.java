@@ -3,6 +3,7 @@ package com.micosoft.estoreback.farmers;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
 @Builder
@@ -26,16 +27,13 @@ public class Farmer {
     private String terms;
     private String notes;
     private Boolean isActive;
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ZonedDateTime updatedAt;
 
 
-    @PrePersist
-    protected void created(){
-        createdAt=ZonedDateTime.now();
-    }
     public void setUpdatedAt() {
         this.updatedAt = ZonedDateTime.now();
     }

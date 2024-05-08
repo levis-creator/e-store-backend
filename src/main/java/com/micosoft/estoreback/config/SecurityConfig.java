@@ -1,7 +1,6 @@
 package com.micosoft.estoreback.config;
 
 import com.micosoft.estoreback.user_profiles.UserProfileServiceImpl;
-import com.micosoft.estoreback.user_profiles.UserProfileServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,12 +25,13 @@ public class SecurityConfig {
     private UserProfileServiceImpl userProfileServices;
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth->auth
+        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth->auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/v1/users").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/users").hasRole("USER")
                         .anyRequest().authenticated()
                 )
+                .userDetailsService(userProfileServices)
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults());
         return http.build();
@@ -38,13 +39,6 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(){
         return userProfileServices;
-    }
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider provider= new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
-        return  provider;
     }
 
     @Bean
