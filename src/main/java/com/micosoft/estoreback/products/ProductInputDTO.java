@@ -24,4 +24,9 @@ public class ProductInputDTO {
     private Boolean isPublished;
     private Long category;
     private Long farmer;
+    private Boolean isWholeSale;
+    private  Long wholeSalePrice;
+    private Long minWholeSaleQuantity;
+    private  String unit;
+    private  Long qty;
 }

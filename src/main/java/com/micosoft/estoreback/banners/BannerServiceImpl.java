@@ -46,7 +46,6 @@ public class BannerServiceImpl implements BannerServices {
         if (!bannerDTO.getIsPublished().equals(dbBanner.getIsPublished())){
             dbBanner.setIsPublished(bannerDTO.getIsPublished());
         }
-        dbBanner.setLastUpdate();
         return bannerRepository.save(dbBanner);
     }
 

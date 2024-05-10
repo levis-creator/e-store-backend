@@ -18,8 +18,8 @@ public class ApiErrorHandler {
     }
 
     @ExceptionHandler(AlreadyExist.class)
-    public ResponseEntity<?> handleAlreadyExistException(NotFound exception) {
-        ApiError alreadyExist = new ApiError(exception.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> handleAlreadyExistException(AlreadyExist exception) {
+        ApiError alreadyExist = new ApiError(exception.getMessage(), HttpStatus.CONFLICT);
         return new ResponseEntity<>(alreadyExist, HttpStatus.CONFLICT);
     }
     @ExceptionHandler(BadRequest.class)

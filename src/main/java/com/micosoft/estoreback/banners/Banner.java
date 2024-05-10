@@ -2,6 +2,8 @@ package com.micosoft.estoreback.banners;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
 
@@ -20,15 +22,13 @@ public class Banner {
     private String title;
     private String url;
     private Boolean isPublished;
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    @Column(name = "createdAt", nullable = false, updatable = false)
     private ZonedDateTime createdAt;
+    @Column( updatable = false)
+    @UpdateTimestamp
     private ZonedDateTime lastUpdate;
-    @PrePersist
-    protected void onCreate(){
-        createdAt=ZonedDateTime.now();
-    }
 
-    public void setLastUpdate() {
-        this.lastUpdate = ZonedDateTime.now();
-    }
+
+
 }

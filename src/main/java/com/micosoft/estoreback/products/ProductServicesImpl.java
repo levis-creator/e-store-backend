@@ -1,6 +1,7 @@
 package com.micosoft.estoreback.products;
 
 import com.micosoft.estoreback.categories.CategoryRepository;
+import com.micosoft.estoreback.errors.exceptions.AlreadyExist;
 import com.micosoft.estoreback.errors.exceptions.NotFound;
 import com.micosoft.estoreback.farmers.FarmerRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,36 @@ public class ProductServicesImpl implements ProductServices {
 
     @Override
     public Product createProduct(ProductInputDTO productInputDTO) {
-        Product product = Product.builder().title(productInputDTO.getTitle()).description(productInputDTO.getDescription()).slug(productInputDTO.getSlug()).images(productInputDTO.getImages()).sku(productInputDTO.getSku()).barcode(productInputDTO.getBarcode()).productPrice(productInputDTO.getProductPrice()).salesPrice(productInputDTO.getSalesPrice()).tags(productInputDTO.getTags()).isPublished(productInputDTO.getIsPublished()).build();
+        Product product = Product.builder()
+                .title(productInputDTO.getTitle())
+                .description(productInputDTO.getDescription())
+                .slug(productInputDTO.getSlug())
+                .images(productInputDTO.getImages())
+                .sku(productInputDTO.getSku())
+                .barcode(productInputDTO.getBarcode())
+                .productPrice(productInputDTO.getProductPrice())
+                .salesPrice(productInputDTO.getSalesPrice())
+                .tags(productInputDTO.getTags())
+                .isPublished(productInputDTO.getIsPublished())
+                .unit(productInputDTO.getUnit())
+                .isWholeSale(productInputDTO.getIsWholeSale())
+                .wholeSalePrice(productInputDTO.getWholeSalePrice())
+                .minWholeSaleQuantity(productInputDTO.getMinWholeSaleQuantity())
+                .qty(productInputDTO.getQty())
+                .build();
+       Product productDb= productRepository.findBySlug(productInputDTO.getSlug()).orElse(null);
         if (productInputDTO.getCategory() != null) {
             categoryRepository.findById(productInputDTO.getCategory()).ifPresent(product::setCategory);
         }
         if (productInputDTO.getFarmer() != null) {
             farmerRepository.findById(productInputDTO.getFarmer()).ifPresent(product::setFarmer);
         }
+        if (productDb==null){
+
         return productRepository.save(product);
+        }else{
+            throw new AlreadyExist("Product already exist");
+        }
     }
 
     @Override
@@ -80,7 +103,6 @@ public class ProductServicesImpl implements ProductServices {
         if (productInputDTO.getCategory() != 0 && !productInputDTO.getCategory().equals(productDb.getCategory().getId())) {
             categoryRepository.findById(productInputDTO.getCategory()).ifPresent(productDb::setCategory);
         }
-        productDb.setUpdatedAt();
         return productRepository.save(productDb);
     }
 

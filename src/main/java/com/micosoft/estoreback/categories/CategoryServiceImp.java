@@ -1,7 +1,7 @@
 package com.micosoft.estoreback.categories;
 
+import com.micosoft.estoreback.errors.exceptions.AlreadyExist;
 import com.micosoft.estoreback.errors.exceptions.NotFound;
-import com.micosoft.estoreback.errors.exceptions.ServerError;
 import com.micosoft.estoreback.market.Market;
 import com.micosoft.estoreback.market.MarketRepository;
 import jakarta.transaction.Transactional;
@@ -35,21 +35,22 @@ public class CategoryServiceImp implements CategoryService {
 
     @Transactional
     @Override
-    public CategoryInputDTO createCategory(CategoryInputDTO categoryInputDTO) {
-            Category category = Category.builder().title(categoryInputDTO.getTitle()).description(categoryInputDTO.getDescription()).slug(categoryInputDTO.getSlug()).imageUrl(categoryInputDTO.getImageUrl()).status(categoryInputDTO.getStatus()).build();
-        try {
-            categoryRepository.save(category);
-            return categoryInputDTO; // This line is preserved, but you may want to return something else.
-        } catch (Exception e) {
-            throw new ServerError("Error creating category", e);
+    public Category createCategory(CategoryInputDTO categoryInputDTO) {
+        Category category = Category.builder().title(categoryInputDTO.getTitle()).description(categoryInputDTO.getDescription()).slug(categoryInputDTO.getSlug()).imageUrl(categoryInputDTO.getImageUrl()).status(categoryInputDTO.getStatus()).build();
+        Category categorySlug = categoryRepository.findBySlug(category.getSlug()).orElse(null);
+
+        if (categorySlug == null) {
+            return categoryRepository.save(category);
+        } else {
+            throw new AlreadyExist("Category already exists");
         }
+
     }
 
 
     @Override
     public CategoryInputDTO updateCategory(Long id, CategoryInputDTO categoryInputDTO) {
         Category categoryDb = categoryRepository.findById(id).orElseThrow(() -> new NotFound("Category Not Found"));
-        Set<Market> marketList = new LinkedHashSet<>();
         if (!categoryInputDTO.getTitle().equals(categoryDb.getTitle()) && !categoryInputDTO.getTitle().isBlank()) {
             categoryDb.setTitle(categoryInputDTO.getTitle());
         }
@@ -66,7 +67,6 @@ public class CategoryServiceImp implements CategoryService {
             categoryDb.setStatus(categoryInputDTO.getStatus());
         }
 
-        categoryDb.setUpdateAt();
         categoryRepository.save(categoryDb);
         return categoryInputDTO;
     }

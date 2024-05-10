@@ -2,6 +2,7 @@ package com.micosoft.estoreback.training;
 
 import com.micosoft.estoreback.categories.Category;
 import com.micosoft.estoreback.categories.CategoryRepository;
+import com.micosoft.estoreback.errors.exceptions.AlreadyExist;
 import com.micosoft.estoreback.errors.exceptions.NotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class TrainingServicesImpl implements TrainingServices{
     private final CategoryRepository categoryRepository;
     @Override
     public Training createTraining(TrainingInputDTO trainingInputDTO) {
+        trainingRepository.findBySlug(trainingInputDTO.getSlug()).ifPresent(()->{throw new AlreadyExist("Training Already Exists"));
         Training training= Training.builder()
                 .title(trainingInputDTO.getTitle())
                 .slug(trainingInputDTO.getSlug())
@@ -63,7 +65,6 @@ public class TrainingServicesImpl implements TrainingServices{
         if (!trainingInputDTO.getIsPublished().equals(trainingDb.getIsPublished())){
             trainingDb.setIsPublished(trainingInputDTO.getIsPublished());
         }
-        trainingDb.setUpdatedAt();
         return trainingRepository.save(trainingDb);
     }
 

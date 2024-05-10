@@ -29,7 +29,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/users").hasRole("USER")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .userDetailsService(userProfileServices)
                 .httpBasic(Customizer.withDefaults())

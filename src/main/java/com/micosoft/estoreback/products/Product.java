@@ -5,6 +5,8 @@ import com.micosoft.estoreback.categories.Category;
 import com.micosoft.estoreback.farmers.Farmer;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -33,25 +35,24 @@ public class Product {
     private Float salesPrice;
     private List<String> tags;
     private Boolean isPublished;
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdAt;
+    @UpdateTimestamp
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ZonedDateTime updatedAt;
 
+    private Boolean isWholeSale;
+    private  Long wholeSalePrice;
+    private Long minWholeSaleQuantity;
+    private  String unit;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
+    private Long qty;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "farmer_id")
     private Farmer farmer;
 
-    @PrePersist
-    protected void onCreate(){
-        createdAt = ZonedDateTime.now();
-    }
-
-    public void setUpdatedAt() {
-        this.updatedAt = ZonedDateTime.now();
-    }
 }
